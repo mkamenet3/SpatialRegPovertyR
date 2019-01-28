@@ -24,6 +24,7 @@ The packages required for the main analysis are:
 - ```sf``` version 0.7-2
 - ```tidycensus``` version 0.9
 - ```dplyr``` version 0.7.8
+- ```readr``` version 1.3.1
 
 
 For the supplementary examples, you will also need:
