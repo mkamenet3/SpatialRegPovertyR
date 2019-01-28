@@ -10,5 +10,5 @@ a set of economic, social, and demographic factors that may relate with county-l
 
 ## Files
  
-- ```poverty2000.csv```: csv file with key demographic variables (above)
+- ```uspoverty2000.csv```: csv file with key demographic variables (above)
 
