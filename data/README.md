@@ -1,6 +1,6 @@
 # data
 
-This folder contains the data for the analysis found in "Spatial Regression Analysis of Poverty in R" (2019) by Kamenetsky, Chi, Wang, and Zhu.
+This folder contains the data for the analysis found in "Spatial Regression Analysis of Poverty in R" (2019) by Chi, Kamenetsky, Wang, and Zhu.
   
 
 The variable of interest is poverty (*povty*), measured as the percentage of
@@ -11,7 +11,4 @@ a set of economic, social, and demographic factors that may relate with county-l
 ## Files
  
 - ```poverty2000.csv```: csv file with key demographic variables (above)
-- ```pov_shp.*```: these files are the shape files that will be imported into
-    ```R``` as a ```spatialpolygonsdataframe```. All of these files must be in
-  your local directory.
 
