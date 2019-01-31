@@ -12,3 +12,7 @@ a set of economic, social, and demographic factors that may relate with county-l
  
 - ```uspoverty2000.csv```: csv file with key demographic variables (above)
 
+For the supplementary tutorials, we also provide ```supplement_poverty.csv```.
+The shape files required for the `tmap` tutorial will be available soon. Users
+can create them locally on their machine by first running the `Weighting and
+Transformations` tutorial in the `supplementary` folder.
