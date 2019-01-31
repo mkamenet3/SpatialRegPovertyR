@@ -1,0 +1,84 @@
+---
+title: "Using tidycensus"
+author: "Maria Kamenetsky"
+date: "January 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+library(tidycensus)
+library(tidyverse)
+library(dplyr)
+
+```
+
+There are several ways to load data into the `R` environment for analysis. Using the `tidycensus` package, we can directly querry the Census Bureau for data after obtainin a Census API key (http://api.census.gov/data/key_signup.html).
+
+```{r, echo=FALSE, eval=FALSE, results=FALSE}
+census_api_key("1142ff2af9614e5b2a4bccdab5a432f8adc910ea", install=TRUE)
+```
+
+
+From the `tidycensus` package, we use the `census_api_key()` function and specify `install=TRUE` so that the API key is stored in the local `R` environment. To access the variables we want from the 2000 Census Summary File 3 (SF3) (https://www.census.gov/census2000/sumfile3.html).  It should be noted that using `tidycensus`, we can also load ACS (American Community Survey) data as well as other census years. 
+
+```{r, eval=FALSE}
+census_api_key("YOUR API KEY HERE", install=TRUE)
+```
+
+```{r}
+vars <- load_variables(2000, "sf3", cache=TRUE)
+```
+
+
+To explore the variables, you can use the `View()` function to filter and explore data available to you.
+
+```{r, eval=FALSE}
+View(vars)
+
+```
+
+![First six observations from loaded Census data](../figures/viewcensus.jpg)
+
+To download selected variables from the decennial Census, we use the `get_decennial()` function. We specify the geography to be "counties", and the output to be "wide", so each column will be a variable and each row will be a county in the United States. To load ACS data, we could use the `get_acs()` function. Below we only select some variables for illustration.
+
+```{r}
+povdata <- get_decennial(geography="county",
+                     variables=c(totpopn="P001001",
+                         povty="P087002",
+                         ag_male="P049003",
+                         ag_female="P051045",
+                         manu_male="P049007",
+                         manu_female="P049034",
+                         retail_male= "P049009",
+                         retail_female="P049036"),
+                     year=2000, output="wide")
+str(povdata)
+head(povdata)
+```
+
+Clean the data using `dplyr` by converting explanatory variables and response to percentages of total :
+
+```{r}
+pov <- povdata %>%
+    dplyr::mutate(poverty = (povty/totpopn)*1000,
+           ag = ((ag_male + ag_female)/totpopn)*1000,
+           manu = ((manu_male + manu_female)/totpopn)*1000,
+           retail = ((retail_male +  retail_female)/totpopn)*1000,
+           STATE = substr(GEOID,1,2)) %>%
+    dplyr::select(GEOID, STATE, NAME, totpopn, poverty, ag, manu, retail)
+
+
+```
+
+
+
+```{r, echo=TRUE}
+write.csv(pov, "../data/supplement_poverty.csv")
+
+```
+
