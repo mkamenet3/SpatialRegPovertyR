@@ -6,8 +6,8 @@ This folder contains supplementary tutorials for the analysis found in "Spatial 
 
 ## Supplementary Tutorials
  
-1. [usingtidycensus](usingtidycensus.Rmd): Using `tidycensus` to directly import census data into `R`
-2. [weightingtransformations](weightingtransformations.Rmd):Using linear transformations and population weights in standard linear regression and spatial linear regression.
-3. [tmap](tmap.Rmd): Using `tmap` for thematic mapping in `R`
+1. [usingtidycensus](usingtidycensus.html): Using `tidycensus` to directly import census data into `R`
+2. [weightingtransformations](weightingtransformations.html):Using linear transformations and population weights in standard linear regression and spatial linear regression.
+3. [tmap](tmap.html): Using `tmap` for thematic mapping in `R`
 
 
