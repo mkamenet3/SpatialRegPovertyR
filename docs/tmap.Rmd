@@ -1,0 +1,111 @@
+---
+title: "Thematic Mapping with tmap"
+author: "Maria Kamenetsky"
+date: "January 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+The `R` package `tmap` includes extensive functionality for making quality maps. We will use it here. 
+
+# Set-Up
+
+```{r}
+library(tmap)
+library(dplyr)
+library(sf)
+```
+
+
+Import shape file of class `sf` (created in *Weighting and Transformations* tutorial):
+
+```{r}
+pv <- read_sf(dsn="../data", layer="pov_uscounties_sf")
+class(pv)
+```
+
+For the example, we will only look at a single state, Wisconsin (state FIPS code 55):
+
+```{r}
+wisc <- pv %>%
+    filter(STATEFP=="55")
+str(wisc)
+```
+
+
+
+
+# Thematic Mapping
+
+```{r}
+#basic grey map with county borders
+basemap <- tm_shape(wisc) +
+    tm_borders() 
+basemap + tm_fill() 
+```
+
+
+We can also plot one of the variables, *poverty*:
+
+```{r}
+povmap <- basemap + tm_fill(col="poverty")
+povmap
+```
+
+Create a map with panels of maps:
+
+```{r}
+#create and store maps
+agmap <- basemap + tm_fill(col="ag")
+retailmap <- basemap + tm_fill(col="retail")
+manumap <- basemap + tm_fill(col="manu")    
+
+#those maps into panels
+tmap_arrange(povmap, agmap, retailmap, manumap)
+```
+
+
+Make an interactive map you can scroll over and visually explore poverty in Wisconsin:
+
+```{r}
+tmap_mode("view")
+basemap + tm_polygons(col="poverty")
+```
+
+
+```{r}
+tmap_mode("plot")
+basemap + tm_polygons(col="poverty") + 
+    tm_symbols(col = "red", size = "totpopn", alpha=0.5) +
+    tm_layout(legend.title.size = 0.7,
+          legend.text.size = 0.5,
+          legend.position = c("right","top"),
+          legend.bg.color = "white",
+          legend.bg.alpha = 1)
+```
+
+
+
+Add a point to Madison, Wisconsin:
+
+```{r}
+mad <- data.frame(c("Madison,Wisconsin"),
+                  lat=43.0731,
+                  long = -89.4012)
+site_mad <- sf::st_as_sf(mad, coords = c("long", "lat"),
+                         crs = "+proj=longlat +datum=WGS84",
+                         agr="identity")
+
+basemap + tm_shape(site_mad) + 
+    tm_dots(size=2, col="red", shape=21) +
+    tm_compass() +
+    tm_layout(title="Madison, WI", title.position = c("center","top"))
+
+```
+
+
+
+

@@ -1,0 +1,141 @@
+---
+title: "Weighting and Transformations"
+author: "Maria Kamenetsky"
+date: "January 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Set-Up
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+library(tidycensus)
+library(tidyverse)
+library(readr)
+library(car)
+library(spdep)
+library(tigris)
+library(sf)
+```
+
+
+```{r}
+pov <- read_csv("../data/supplement_poverty.csv")
+str(pov)
+```
+
+
+# Standard Linear Regression
+
+Without consideration for spatial dependence of the counties, let's first explore a standard linear regression model:
+
+```{r}
+m1 <- lm(poverty ~ ag + manu + retail, data=pov)
+summary(m1)
+```
+
+Diagnostic plots:
+
+```{r, fig.height=3, fig.width=8}
+par(mfrow=c(1,2))
+plot(m1, which=c(1,2))
+```
+
+Evidence of heteroskedasticity based on residuals plot. We fill first explore transformations.
+
+
+## Transformations
+
+There are many various linear transformations one can take (log, logit, square root, arcsine). In this example, we will explore the logit transformation which is often used in demographic studies. The logit can be defined as:
+
+$$logit(p) = log(\frac{p}{1-p})$$
+
+
+```{r}
+m1_logit <- lm(car::logit(poverty) ~ ag + manu + retail, data = pov)
+summary(m1_logit)
+```
+
+
+
+```{r, fig.height=3, fig.width=8}
+par(mfrow=c(1,2))
+plot(m1_logit, which=c(1,2))
+
+```
+
+After the transformation, we observe that while the residuals vs. fitted plot looks better, there still appears to be a pattern in the residuals, indicating heteroskedasticity. For the QQ plot, the majority of the observations align nicely along the 45 degree line. However we do observe a slight bowl shape, indicating right skewness in the distribution of the residuals.
+
+## Weighting
+
+```{r}
+m1_weight <- lm(poverty ~ ag + manu + retail, data = pov, weights = totpopn)
+summary(m1_weight)
+```
+
+```{r, fig.height=3, fig.width=8}
+par(mfrow=c(1,2))
+plot(m1_weight, which=c(1,2))
+
+```
+
+# Spatial Linear Models
+
+To demonstrate how these transformations will look like with spatial linear models, we will use the SAR model across the transformation and weighting.
+
+First, prepare the spatial data:
+
+```{r, results="hide", message=FALSE, warning=FALSE}
+uscounties <- counties(state = pov$STATE,
+                       cb=TRUE,year=2000)
+uscounties_sf <- st_as_sf(uscounties)
+uscounties_sf$FIPS <- paste0(uscounties_sf$STATEFP, uscounties_sf$COUNTYFP)
+#merge sf to pov
+pov_uscounties_sf <- merge(uscounties_sf, pov, by.x="FIPS", by.y="GEOID")
+povnb <- poly2nb(as_Spatial(pov_uscounties_sf))
+listw_povW = nb2listw(povnb, style="W",zero.policy = TRUE)
+```
+
+
+## Transformations
+
+```{r}
+m1_logit.sar <- spautolm(car::logit(poverty) ~ ag + manu + retail, data = pov, 
+                         family="SAR", listw = listw_povW, zero.policy = TRUE)
+summary(m1_logit.sar)
+
+```
+
+```{r, fig.height=3, fig.width=5, fig.cap="Fitted values versus residuals plot for logit transformed SAR model"}
+plot(fitted(m1_logit.sar),residuals(m1_logit.sar), cex=0.5,
+     xlab="Fitted Values", ylab="Residuals", main="Fitted Values vs. Residuals Plot")
+abline(h=0, col="red", lty=2)
+```
+
+
+## Weighting
+
+```{r}
+m1_weight.sar <- spautolm(poverty ~ ag + manu + retail, data = pov, 
+                         family="SAR", listw = listw_povW, zero.policy = TRUE,
+                         weights = totpopn)
+summary(m1_weight.sar)
+
+```
+
+
+```{r, fig.height=3, fig.width=5, fig.cap="Fitted values versus residuals plot for population-weighted SAR model"}
+plot(fitted(m1_weight.sar),residuals(m1_weight.sar), cex=0.5,
+     xlab="Fitted Values", ylab="Residuals", main="Fitted Values vs. Residuals Plot")
+abline(h=0, col="red", lty=2)
+```
+
+
+```{r, echo=TRUE}
+write_sf(pov_uscounties_sf, dsn="../data/pov_uscounties_sf.shp")
+
+```
+
