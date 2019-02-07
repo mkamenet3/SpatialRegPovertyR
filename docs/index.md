@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: Spatial Regression Analysis of Poverty Using R
 tagline: 
 description: Supplementary Tutorials
