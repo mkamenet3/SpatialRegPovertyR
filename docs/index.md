@@ -5,8 +5,7 @@ tagline:
 description: Supplementary Tutorials
 ---
 
-This folder contains supplementary tutorials for the analysis found in "Spatial Regression Analysis of Poverty in R" 
-(2019) by Chi, Kamenetsky, Wang, and Zhu. Data can be found [here](https://github.com/mkamenet3/SpatialRegPovertyR/tree/master/data).
+Supplementary tutorials for the teaching note on Spatial Regression Analysis of Poverty in R. Data can be found [here](https://github.com/mkamenet3/SpatialRegPovertyR/tree/master/data).
 
 ### Supplementary Tutorials
 
