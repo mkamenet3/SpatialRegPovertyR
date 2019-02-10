@@ -1,8 +1,8 @@
 # SpatialRegPovertyR: A Teaching Note on Spatial Regression Analysis Using R
 
 
-This repository contains the data used in the teaching note, "Spatial
-Regression Analysis of Poverty in R" (2019) by Chi, Kamenetsky, Wang, and Zhu. 
+This repository contains the data used in a teaching note on Spatial
+Regression Analysis of Poverty in R.
 
 Additionally, we include supplementary code and examples.
 
@@ -11,7 +11,7 @@ Please report any bugs or modifications to issues
 
 ## Installation
 
-```R``` version 3.5.2 ("Eggshell Igloor") was used for this analysis.
+```R``` version 3.5.2 ("Eggshell Igloo") was used for this analysis.
 
 The packages required for the main analysis are:
 
