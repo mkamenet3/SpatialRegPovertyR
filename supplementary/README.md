@@ -1,6 +1,6 @@
 # supplementary
 
-This folder contains supplementary tutorials for the analysis found in "Spatial Regression Analysis of Poverty in R" (2019) by Kamenetsky, Chi, Wang, and Zhu *([Spatial Demography](https://link.springer.com/article/10.1007/s40980-019-00048-0))*. Data can be found in the **data** folder.
+This folder contains supplementary tutorials for the analysis found in "Spatial Regression Analysis of Poverty in R" (2019) by Kamenetsky, Chi, Wang, and Zhu *([Spatial Demography](https://link.springer.com/article/10.1007/s40980-019-00048-0))*. Supplementary tutorials can be on the GitHub pages site found [here](https://mkamenet3.github.io/SpatialRegPovertyR/). Data can be found in the **data** folder.
   
  
 
