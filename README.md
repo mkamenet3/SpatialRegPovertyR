@@ -3,6 +3,9 @@
 
 This repository contains the data used in a research note "Spatial Regression Analysis of Poverty in R" (2019) by Kamenetsky, Chi, Wang, and Zhu *([Spatial Demography](https://link.springer.com/article/10.1007/s40980-019-00048-0))*. Supplementary tutorials can be on the GitHub pages site found [here](https://mkamenet3.github.io/SpatialRegPovertyR/).
 
+Due to the size of the shape files, please contact maria.kamenetsky@gmail.com directly for them.
+
+
 Additionally, we include supplementary code and examples.
 
 Please report any bugs or modifications to issues
